@@ -1,19 +1,25 @@
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSun, faCloud, faCloudSun, faCloudRain, faUmbrella, faDroplet, faArrowRight, faSnowflake, faSmog, faBolt, faCloudShowersHeavy } from '@fortawesome/free-solid-svg-icons'
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { WeatherDetail } from "../models/WeatherDetail";
 import { ReactTyped } from "react-typed";
 
 export function Weather() {
+    const [input, setInput] = useState("");
     const [location, setLocation] = useState("Chicago");
     const [weatherData, setWeatherData] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
-    async function fetchWeather() {
+
+    const weatherFetch = useCallback(async () => {
         setIsLoading(true);
         const response = await axios.get(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=C2ZWGDPL89VM7XPZX7AQGY9CS&contentType=json`)
         fetchWeatherDetail(response);
+    }, [location])
+
+    function handleSubmit() {
+        setLocation(input);
     }
 
     function fetchWeatherDetail(response) {
@@ -28,8 +34,8 @@ export function Weather() {
         }, 1000)
     }
 
-    function handleLocationChange(event) {
-        setLocation(event.target.value)
+    function handleInputChange(event) {
+        setInput(event.target.value)
     }
 
     function getConditionIcon(icon) {
@@ -70,8 +76,8 @@ export function Weather() {
     }
 
     useEffect(() => {
-        fetchWeather();
-    }, [])
+        weatherFetch();
+    }, [weatherFetch]) 
 
 
     return (
@@ -83,9 +89,9 @@ export function Weather() {
             <div className="vh-100 d-flex flex-column justify-content-center align-items-center">
                 <div className="row mt-5">
                     <div className="input-group mb-3">
-                        <input type="text" className="form-control" placeholder="Enter Location" onChange={handleLocationChange} />
-                        <div className="input-group-append" onClick={fetchWeather}>
-                            <button className="btn btn-outline-secondary" type="button"><FontAwesomeIcon icon={faArrowRight} onClick={fetchWeather} /></button>
+                        <input type="text" className="form-control" placeholder="Enter Location" onChange={handleInputChange} />
+                        <div className="input-group-append" onClick={handleSubmit}>
+                            <button className="btn btn-outline-secondary" type="button"><FontAwesomeIcon icon={faArrowRight} onClick={handleSubmit} /></button>
                         </div>
                     </div>
                 </div>
