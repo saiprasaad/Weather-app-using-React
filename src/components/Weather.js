@@ -12,7 +12,7 @@ export function Weather() {
 
     async function fetchWeather() {
         setIsLoading(true);
-        const response = await axios.get(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key="<Your Key>"&contentType=json`)
+        const response = await axios.get(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=C2ZWGDPL89VM7XPZX7AQGY9CS&contentType=json`)
         fetchWeatherDetail(response);
     }
 
